@@ -10,13 +10,13 @@ function App() {
   const businessName = "PHARMONIS PHARMA";
 
   const generateUPILink = (amount) => {
-    return `upi://pay?pa=${upiID}&pn=${encodeURIComponent(businessName)}&am=${amount}&cu=INR`;
+    return \`upi://pay?pa=\${upiID}&pn=\${encodeURIComponent(businessName)}&am=\${amount}&cu=INR\`;
   };
 
   const sendWhatsAppMessage = (customer) => {
-    const message = `Hi ${customer.name},%0A%0AThis is a reminder from ${businessName}. ₹${customer.amount} is pending on your account.%0A%0APlease pay using the button below.%0A%0AThank you,%0A${businessName}`;
-    const whatsappURL = `https://wa.me/91${customer.phone}?text=${message}`;
-    window.location.href = whatsappURL;
+    const message = \`Hi \${customer.name},%0A%0AThis is a reminder from \${businessName}. ₹\${customer.amount} is pending on your account.%0A%0APlease pay using the link below:%0A\${generateUPILink(customer.amount)}%0A%0AThank you,%0A\${businessName}\`;
+    const whatsappURL = \`https://wa.me/91\${customer.phone}?text=\${message}\`;
+    window.open(whatsappURL, "_blank");
   };
 
   const markAsPaid = (index) => {
@@ -44,21 +44,7 @@ function App() {
           <div><strong>{customer.name}</strong> (📞 {customer.phone})</div>
           <div>Amount: ₹{customer.amount}</div>
           <div>Status: {customer.paid ? "✅ Paid" : "❌ Unpaid"}</div>
-          <button onClick={() => sendWhatsAppMessage(customer)}>Send WhatsApp Reminder</button>
-          <a
-            href={generateUPILink(customer.amount)}
-            style={{
-              display: "inline-block",
-              marginTop: 8,
-              padding: "8px 12px",
-              background: "#00b386",
-              color: "white",
-              borderRadius: 4,
-              textDecoration: "none"
-            }}
-          >
-            💸 Pay Now via UPI
-          </a>
+          <button onClick={() => sendWhatsAppMessage(customer)}>Send Reminder</button>
           {!customer.paid && <button onClick={() => markAsPaid(index)}>Mark as Paid</button>}
         </div>
       ))}
